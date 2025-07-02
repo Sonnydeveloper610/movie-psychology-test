@@ -7,10 +7,10 @@ import StartPage from "./components/StartPage";
 import QuizPage from "./components/QuizPage";
 import LoadingPage from "./components/LoadingPage";
 import ResultPage from "./components/ResultPage";
+import KakaoAd from "./components/KakaoAd"; // 광고 컴포넌트 import
 
 // 장르 매핑
 const genreScores = {
-  // 한국어
   "행복": "코미디", "슬픔": "드라마", "짜증": "액션", "설렘": "로맨스",
   "스토리": "드라마", "연출": "스릴러", "배우": "로맨스", "음악": "코미디",
   "밝음": "코미디", "어두움": "스릴러", "스릴": "스릴러", "감동": "드라마",
@@ -187,7 +187,7 @@ export default function App() {
     }
   };
 
-  // 결과보기 버튼
+  // 결과보기 버튼 클릭
   const handleShowResult = () => {
     setStep("loading");
     setTimeout(() => setStep("result"), 3000);
@@ -235,10 +235,28 @@ export default function App() {
           <QuizPage t={t} questions={questions} current={current} onAnswer={handleAnswer} />
         )}
         {step === "showResultBtn" && (
-          <button style={{
-            background: "#ffd6e0", color: "#22223b", border: "none", borderRadius: "18px",
-            fontSize: "1.1rem", padding: "14px 0", width: "100%", fontWeight: 600, boxShadow: "0 2px 8px #f9a8d440", cursor: "pointer"
-          }} onClick={handleShowResult}>{t.showResult}</button>
+          <>
+            {/* 광고를 결과보기 버튼 바로 위에 삽입 */}
+            <KakaoAd />
+            <button
+              style={{
+                background: "#ffd6e0",
+                color: "#22223b",
+                border: "none",
+                borderRadius: "18px",
+                fontSize: "1.1rem",
+                padding: "14px 0",
+                width: "100%",
+                fontWeight: 600,
+                boxShadow: "0 2px 8px #f9a8d440",
+                cursor: "pointer",
+                marginTop: "20px"
+              }}
+              onClick={handleShowResult}
+            >
+              {t.showResult}
+            </button>
+          </>
         )}
         {step === "loading" && (
           <LoadingPage t={t} />

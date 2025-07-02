@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { FaCrown, FaFilm } from "react-icons/fa";
+import KakaoAd from "./KakaoAd"; // 상단에 import
 
 const MagazineCard = styled.div`
   display: flex;
@@ -135,11 +136,12 @@ export default function ResultPage({ t, genre, movies, onShareResult, onShareApp
           </MovieItem>
         ))}
       </MovieList>
-      <ShareRow>
-        <Button onClick={onShareResult}>{t.shareResult}</Button>
-        <Button onClick={onShareApp}>{t.shareApp}</Button>
-      </ShareRow>
-      {copyMsg && <CopyMsg>{copyMsg}</CopyMsg>}
-    </MagazineCard>
-  );
+    <ShareRow>
+      <Button onClick={onShareResult}>{t.shareResult}</Button>
+      <Button onClick={onShareApp}>{t.shareApp}</Button>
+    </ShareRow>
+    {copyMsg && <CopyMsg>{copyMsg}</CopyMsg>}
+    <KakaoAd /> {/* 광고 삽입 */}
+  </MagazineCard>
+);
 }
