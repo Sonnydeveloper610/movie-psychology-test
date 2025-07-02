@@ -8,7 +8,7 @@ import QuizPage from "./components/QuizPage";
 import LoadingPage from "./components/LoadingPage";
 import ResultPage from "./components/ResultPage";
 
-// 장르 매핑 및 추천 영화
+// 장르 매핑
 const genreScores = {
   // 한국어
   "행복": "코미디", "슬픔": "드라마", "짜증": "액션", "설렘": "로맨스",
@@ -46,26 +46,80 @@ const genreScores = {
   "Calificación": "Drama", "Director": "Suspenso", "Actor": "Romance", "Género": "Comedia"
 };
 
+// 장르별 한국+해외 명작 영화 리스트
 const movieList = {
-  // 한국어
-  "코미디": ["극한직업", "럭키", "써니", "스물", "정직한 후보"],
-  "드라마": ["기생충", "밀양", "시", "도가니", "완득이"],
-  "액션": ["베테랑", "아저씨", "부산행", "신세계", "암살"],
-  "로맨스": ["건축학개론", "노트북", "이터널 선샤인", "비포 선셋", "어바웃 타임"],
-  "스릴러": ["추격자", "살인의 추억", "올드보이", "곡성", "마더"],
+  "코미디": {
+    kr: ["극한직업", "럭키"],
+    world: ["The Hangover", "Superbad", "Paddington in Peru", "Bridesmaids", "Step Brothers"]
+  },
+  "드라마": {
+    kr: ["기생충", "밀양"],
+    world: ["The Shawshank Redemption", "Forrest Gump", "A Beautiful Mind", "Whiplash", "Parasite"]
+  },
+  "액션": {
+    kr: ["베테랑", "부산행"],
+    world: ["Mad Max: Fury Road", "John Wick", "Gladiator", "Inception", "The Gorge"]
+  },
+  "로맨스": {
+    kr: ["건축학개론", "너의 결혼식"],
+    world: ["The Notebook", "La La Land", "Eternal Sunshine", "About Time", "Elio"]
+  },
+  "스릴러": {
+    kr: ["추격자", "살인의 추억"],
+    world: ["Se7en", "Gone Girl", "Prisoners", "Oldboy", "Frankenstein"]
+  },
   // 영어
-  "Comedy": ["The Hangover", "Superbad", "Bridesmaids", "Step Brothers", "21 Jump Street"],
-  "Drama": ["The Shawshank Redemption", "Forrest Gump", "Parasite", "A Beautiful Mind", "Whiplash"],
-  "Action": ["Mad Max: Fury Road", "John Wick", "Gladiator", "Inception", "The Dark Knight"],
-  "Romance": ["The Notebook", "La La Land", "Eternal Sunshine", "Before Sunrise", "About Time"],
-  "Thriller": ["Se7en", "Gone Girl", "Prisoners", "Oldboy", "The Girl with the Dragon Tattoo"],
+  "Comedy": {
+    kr: ["Extreme Job", "Luck-Key"],
+    world: ["The Hangover", "Superbad", "Paddington in Peru", "Bridesmaids", "Step Brothers"]
+  },
+  "Drama": {
+    kr: ["Parasite", "Secret Sunshine"],
+    world: ["The Shawshank Redemption", "Forrest Gump", "A Beautiful Mind", "Whiplash"]
+  },
+  "Action": {
+    kr: ["Veteran", "Train to Busan"],
+    world: ["Mad Max: Fury Road", "John Wick", "Gladiator", "Inception", "The Gorge"]
+  },
+  "Romance": {
+    kr: ["Architecture 101", "On Your Wedding Day"],
+    world: ["The Notebook", "La La Land", "Eternal Sunshine", "About Time", "Elio"]
+  },
+  "Thriller": {
+    kr: ["The Chaser", "Memories of Murder"],
+    world: ["Se7en", "Gone Girl", "Prisoners", "Oldboy", "Frankenstein"]
+  },
   // 스페인어
-  "Comedia": ["No se aceptan devoluciones", "Ocho apellidos vascos", "Perfectos desconocidos", "Toc Toc", "El otro lado de la cama"],
-  "Drama": ["El secreto de sus ojos", "Mar adentro", "Roma", "Campeones", "La lengua de las mariposas"],
-  "Acción": ["Celda 211", "El Niño", "Torrente", "El cuerpo", "La isla mínima"],
-  "Romance": ["Tres metros sobre el cielo", "A tres metros sobre el cielo", "Palmeras en la nieve", "El diario de Noa", "Perdona si te llamo amor"],
-  "Suspenso": ["El orfanato", "Tesis", "Los ojos de Julia", "Contratiempo", "El cuerpo"]
+  "Comedia": {
+    kr: ["Extreme Job", "Luck-Key"],
+    world: ["No se aceptan devoluciones", "Ocho apellidos vascos", "Paddington in Peru", "Bridesmaids", "Step Brothers"]
+  },
+  "Drama": {
+    kr: ["Parásitos", "Secret Sunshine"],
+    world: ["El secreto de sus ojos", "Mar adentro", "Roma", "Campeones", "La lengua de las mariposas"]
+  },
+  "Acción": {
+    kr: ["Veteran", "Train to Busan"],
+    world: ["Celda 211", "El Niño", "Mad Max: Fury Road", "John Wick", "Gladiator"]
+  },
+  "Romance": {
+    kr: ["Architecture 101", "On Your Wedding Day"],
+    world: ["Tres metros sobre el cielo", "Palmeras en la nieve", "El diario de Noa", "About Time", "Elio"]
+  },
+  "Suspenso": {
+    kr: ["The Chaser", "Memories of Murder"],
+    world: ["El orfanato", "Tesis", "Los ojos de Julia", "Contratiempo", "Frankenstein"]
+  }
 };
+
+// 추천 영화 5종 섞기 함수
+function getMixedMovies(genre) {
+  const { kr = [], world = [] } = movieList[genre] || {};
+  const shuffle = arr => arr.slice().sort(() => Math.random() - 0.5);
+  const krPick = shuffle(kr).slice(0, Math.floor(Math.random() * 2) + 1); // 1~2편
+  const worldPick = shuffle(world).slice(0, 5 - krPick.length);
+  return shuffle([...krPick, ...worldPick]);
+}
 
 const pastel = {
   bg: "#f6f5fb",
@@ -110,7 +164,7 @@ export default function App() {
   const [current, setCurrent] = useState(0);
   const [answers, setAnswers] = useState([]);
   const [copyMsg, setCopyMsg] = useState("");
-  const [lang, setLang] = useState(detectLang());
+  const [lang] = useState(detectLang());
   const t = { ko, en, es }[lang];
 
   const questions = t.questions;
@@ -152,7 +206,8 @@ export default function App() {
   // 공유(POST) 기능
   const handleShareResult = () => {
     const genre = getGenre();
-    const text = `[${t.testName}]\n${t.yourGenre} ${genre}\n${t.recommend}:\n${(movieList[genre]||[]).join(", ")}`;
+    const movies = getMixedMovies(genre);
+    const text = `[${t.testName}]\n${t.yourGenre} ${genre}\n${t.recommend}:\n${movies.join(", ")}`;
     if (navigator.share) {
       navigator.share({ title: t.testName, text, url: window.location.href });
     } else {
@@ -166,6 +221,9 @@ export default function App() {
     setCopyMsg(t.copySuccess);
     setTimeout(() => setCopyMsg(""), 2000);
   };
+
+  const genre = getGenre();
+  const movies = getMixedMovies(genre);
 
   return (
     <Container>
@@ -188,8 +246,8 @@ export default function App() {
         {step === "result" && (
           <ResultPage
             t={t}
-            genre={getGenre()}
-            movies={movieList[getGenre()] || []}
+            genre={genre}
+            movies={movies}
             onShareResult={handleShareResult}
             onShareApp={handleShareApp}
             copyMsg={copyMsg}

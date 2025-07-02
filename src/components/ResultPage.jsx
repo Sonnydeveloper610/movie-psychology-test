@@ -15,13 +15,16 @@ const MagazineCard = styled.div`
   margin: 0 auto;
 `;
 
-const Label = styled.div`
-  font-size: 1.1rem;
-  color: #f9a8d4;
-  font-weight: 700;
-  letter-spacing: 1px;
-  margin-bottom: 12px;
-  text-align: center;
+const Balloon = styled.div`
+  background: #fff3f8;
+  color: #6247aa;
+  font-size: 1.05rem;
+  font-weight: 500;
+  border-radius: 18px 18px 18px 4px;
+  padding: 12px 18px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px #f9a8d420;
+  display: inline-block;
 `;
 
 const GenreRow = styled.div`
@@ -108,18 +111,6 @@ const CopyMsg = styled.div`
   text-align: center;
   margin-top: 12px;
   font-size: 0.97rem;
-`;
-
-const Balloon = styled.div`
-  background: #fff3f8;
-  color: #6247aa;
-  font-size: 1.05rem;
-  font-weight: 500;
-  border-radius: 18px 18px 18px 4px;
-  padding: 12px 18px;
-  margin-bottom: 24px;
-  box-shadow: 0 2px 8px #f9a8d420;
-  display: inline-block;
 `;
 
 export default function ResultPage({ t, genre, movies, onShareResult, onShareApp, copyMsg }) {
